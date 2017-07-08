@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Emails</title>
+  </head>
+  <body>
+    <h1>Add an Email</h1>
+    <form action='/add_email' method='POST'>
+      <label for="email">Email:<input type="email" name="email" id="email"></label>
+      <input type="submit" value="Add">
+    </form>
+    <hr>
+    <h2>These are all my emails!</h2>
+    <!-- we can use the line below to see all of our data in our template -->
+    {{all_emails}}
+    <!-- with all the data we can then construct a more structured output -->
+    <h2>Email Addresses Entered:</h2>
+    {% for email in all_emails: %}
+      <form action="/delete/{{email['id']}}" method='POST'>
+        <p>ID: {{ email['id'] }}
+           Email: {{ email['email'] }}
+            {{ email['created_at'] }}
+        <input type="submit" value='Delete'>
+        </p>
+      </form>
+    {% endfor %}
+  </body>
+</html>

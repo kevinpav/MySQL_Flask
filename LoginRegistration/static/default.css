@@ -1,0 +1,33 @@
+h1 {
+  color: blue;
+  text-align: center;
+}
+form{
+  display: table;
+}
+p{
+  display: table-row;
+}
+label{
+  display: table-cell;
+  padding: 2px 5px;
+  text-align: right;
+  width: 110px;
+}
+input{
+  display: table-cell;
+}
+table{
+  border:  2px solid black;
+  width: 80%;
+}
+th{
+  text-align: left;
+  background-color: #C8C8C8;
+}
+tbody tr:nth-child(even){
+  background-color: #E8E8E8;
+}
+.register{
+  margin: 25px 150px;
+}

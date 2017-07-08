@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Login/Registration</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='default.css') }}">
+  </head>
+  <body>
+    <h1>Login/Registration</h1>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+          {% for message in messages %}
+            <li>{{ message | safe }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <form action='/login' method='POST'>
+      <p>
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email">
+      </p>
+      <p>
+        <label for="passwd">Password:</label>
+        <input type="password" name="passwd" id="passwd">
+        <input type="submit" value="Login">
+      </p>
+    </form>
+    <div class="register">
+      <input type="button" onClick="parent.location='/register'" value="Registration">
+    </div>
+  </body>
+</html>

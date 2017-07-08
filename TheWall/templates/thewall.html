@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>The Wall - Messages</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='default.css') }}">
+  </head>
+  <body>
+    <div class="header">
+      <h1>CodingDojo Wall</h1>
+        <b>Welcome {{username}}</b>
+        <a href="/logout">[log off]</a>
+    </div>
+    <hr>
+    <div class="message">
+      <form action="/thewall" method="post">
+        <h2>Post a message</h2>
+        <textarea name="message" rows="6" cols="80"></textarea>
+        <button class="message_btn" type="submit" name="submit">Post a message</button>
+      </form>
+    </div>
+    <div>
+    {% for message in all_messages %}
+      <h3>
+        {{message['msguser']}} - {{message['msgdate']}}
+      </h3>
+      <p class="message">
+        {{message['msgtext']}}
+      </p>
+      <div class="comment_div">
+        <form action="/thewall/{{message['id']}}" method="post">
+          <ul>
+            {% for comment in message['comments'] %}
+            <li>
+              <h4>
+                {{ comment['cmtuser'] }} - {{ comment['cmtdate'] }}
+              </h4>
+              <p class="comment">
+                {{ comment['comment'] }}
+              </p>
+            </li>
+            <hr>
+            {% endfor %}
+            <h3>Post a comment</h3>
+            <textarea name="comment" rows="4" cols="60"></textarea>
+            <button class="comment_btn" type="submit" name="submit">Post a comment</button>
+          </ul>
+        <hr>
+        </form>
+      </div>
+    {% endfor %}
+    </div>
+  </body>
+</html>

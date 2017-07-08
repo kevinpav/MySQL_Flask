@@ -1,0 +1,271 @@
+## Tested various connection errors using code baseline:
+config = {
+        ##'host': 'localhost',
+        'host': 'some-wierd-host',
+        'database': db, # we got db as an argument
+        'user': 'root',
+        'password': 'root',
+        'port': '3306' # change the port to match the port your SQL server is running on
+}
+# this will use the above values to generate the path to connect to your sql database
+DATABASE_URI = "mysql://{}:{}@127.0.0.1:{}/{}".format(config['user'], config['password'], config['port'], config['database'])
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+##
+1) Changed 'host', and saw the code still worked. Looking closers at thE DATABASE_URI you
+  can see that localhost is hardcoded in the connect string (127.0.0.0). Probably something that could use to be fixed.
+2) Changed user to a "hackerz" id. Failures, as expected.
+3) changed password. Again failed as expected.
+4) Changed port to the default '3306', and it failed. This is the error I got previously
+  as the baseline code is 3306 but I have my SQLDB port set to 8889.
+##
+
+(FLASKM~1) D:\Users\Kevin\My Documents\CodingDojo\MySQL\flask_mysql>python server.py
+[{u'id': 1L, u'name': u'nameone'}, {u'id': 2L, u'name': u'nametwo'}, {u'id': 3L, u'name':
+u'namethree'}]
+ * Restarting with stat
+[{u'id': 1L, u'name': u'nameone'}, {u'id': 2L, u'name': u'nametwo'}, {u'id': 3L, u'name':
+u'namethree'}]
+ * Debugger is active!
+ * Debugger PIN: 209-043-908
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+
+(FLASKM~1) D:\Users\Kevin\My Documents\CodingDojo\MySQL\flask_mysql>python server.py
+[{u'id': 1L, u'name': u'nameone'}, {u'id': 2L, u'name': u'nametwo'}, {u'id': 3L, u'name':
+u'namethree'}]
+ * Restarting with stat
+[{u'id': 1L, u'name': u'nameone'}, {u'id': 2L, u'name': u'nametwo'}, {u'id': 3L, u'name':
+u'namethree'}]
+ * Debugger is active!
+ * Debugger PIN: 209-043-908
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+ * Detected change in 'D:\\Users\\Kevin\\My Documents\\CodingDojo\\MySQL\\flask_mysql\\mys
+qlconnection.py', reloading
+ * Restarting with stat
+Traceback (most recent call last):
+  File "server.py", line 8, in <module>
+    print mysql.query_db("SELECT * FROM users")
+  File "D:\Users\Kevin\My Documents\CodingDojo\MySQL\flask_mysql\mysqlconnection.py", line
+ 24, in query_db
+    result = self.db.session.execute(text(query), data)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\orm\s
+coping.py", line 157, in do
+    return getattr(self.registry(), name)(*args, **kwargs)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\orm\s
+ession.py", line 1139, in execute
+    bind, close_with_result=True).execute(clause, params or {})
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\orm\s
+ession.py", line 1003, in _connection_for_bind
+    engine, execution_options)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\orm\s
+ession.py", line 403, in _connection_for_bind
+    conn = bind.contextual_connect()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\base.py", line 2112, in contextual_connect
+    self._wrap_pool_connect(self.pool.connect, None),
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\base.py", line 2151, in _wrap_pool_connect
+    e, dialect, self)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\base.py", line 1465, in _handle_dbapi_exception_noconnection
+    exc_info
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\util\
+compat.py", line 203, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\base.py", line 2147, in _wrap_pool_connect
+    return fn()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 387, in connect
+    return _ConnectionFairy._checkout(self)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 766, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 516, in checkout
+    rec = pool._do_get()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 1138, in _do_get
+    self._dec_overflow()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\util\
+langhelpers.py", line 66, in __exit__
+    compat.reraise(exc_type, exc_value, exc_tb)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 1135, in _do_get
+    return self._create_connection()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 333, in _create_connection
+    return _ConnectionRecord(self)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 461, in __init__
+    self.__connect(first_connect_check=True)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 651, in __connect
+    connection = pool._invoke_creator(self)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\strategies.py", line 105, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\default.py", line 393, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\MySQLdb\__init__
+.py", line 81, in Connect
+    return Connection(*args, **kwargs)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\MySQLdb\connecti
+ons.py", line 206, in __init__
+    super(Connection, self).__init__(*args, **kwargs2)
+sqlalchemy.exc.OperationalError: (_mysql_exceptions.OperationalError) (1045, "Access denie
+d for user 'haCkerZ'@'localhost' (using password: YES)")
+
+(FLASKM~1) D:\Users\Kevin\My Documents\CodingDojo\MySQL\flask_mysql>python server.py
+Traceback (most recent call last):
+  File "server.py", line 8, in <module>
+    print mysql.query_db("SELECT * FROM users")
+  File "D:\Users\Kevin\My Documents\CodingDojo\MySQL\flask_mysql\mysqlconnection.py", line
+ 24, in query_db
+    result = self.db.session.execute(text(query), data)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\orm\s
+coping.py", line 157, in do
+    return getattr(self.registry(), name)(*args, **kwargs)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\orm\s
+ession.py", line 1139, in execute
+    bind, close_with_result=True).execute(clause, params or {})
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\orm\s
+ession.py", line 1003, in _connection_for_bind
+    engine, execution_options)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\orm\s
+ession.py", line 403, in _connection_for_bind
+    conn = bind.contextual_connect()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\base.py", line 2112, in contextual_connect
+    self._wrap_pool_connect(self.pool.connect, None),
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\base.py", line 2151, in _wrap_pool_connect
+    e, dialect, self)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\base.py", line 1465, in _handle_dbapi_exception_noconnection
+    exc_info
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\util\
+compat.py", line 203, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\base.py", line 2147, in _wrap_pool_connect
+    return fn()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 387, in connect
+    return _ConnectionFairy._checkout(self)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 766, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 516, in checkout
+    rec = pool._do_get()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 1138, in _do_get
+    self._dec_overflow()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\util\
+langhelpers.py", line 66, in __exit__
+    compat.reraise(exc_type, exc_value, exc_tb)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 1135, in _do_get
+    return self._create_connection()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 333, in _create_connection
+    return _ConnectionRecord(self)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 461, in __init__
+    self.__connect(first_connect_check=True)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 651, in __connect
+    connection = pool._invoke_creator(self)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\strategies.py", line 105, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\default.py", line 393, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\MySQLdb\__init__
+.py", line 81, in Connect
+    return Connection(*args, **kwargs)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\MySQLdb\connecti
+ons.py", line 206, in __init__
+    super(Connection, self).__init__(*args, **kwargs2)
+sqlalchemy.exc.OperationalError: (_mysql_exceptions.OperationalError) (1045, "Access denie
+d for user 'root'@'localhost' (using password: YES)")
+
+(FLASKM~1) D:\Users\Kevin\My Documents\CodingDojo\MySQL\flask_mysql>python server.py
+Traceback (most recent call last):
+  File "server.py", line 8, in <module>
+    print mysql.query_db("SELECT * FROM users")
+  File "D:\Users\Kevin\My Documents\CodingDojo\MySQL\flask_mysql\mysqlconnection.py", line
+ 23, in query_db
+    result = self.db.session.execute(text(query), data)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\orm\s
+coping.py", line 157, in do
+    return getattr(self.registry(), name)(*args, **kwargs)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\orm\s
+ession.py", line 1139, in execute
+    bind, close_with_result=True).execute(clause, params or {})
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\orm\s
+ession.py", line 1003, in _connection_for_bind
+    engine, execution_options)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\orm\s
+ession.py", line 403, in _connection_for_bind
+    conn = bind.contextual_connect()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\base.py", line 2112, in contextual_connect
+    self._wrap_pool_connect(self.pool.connect, None),
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\base.py", line 2151, in _wrap_pool_connect
+    e, dialect, self)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\base.py", line 1465, in _handle_dbapi_exception_noconnection
+    exc_info
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\util\
+compat.py", line 203, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\base.py", line 2147, in _wrap_pool_connect
+    return fn()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 387, in connect
+    return _ConnectionFairy._checkout(self)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 766, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 516, in checkout
+    rec = pool._do_get()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 1138, in _do_get
+    self._dec_overflow()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\util\
+langhelpers.py", line 66, in __exit__
+    compat.reraise(exc_type, exc_value, exc_tb)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 1135, in _do_get
+    return self._create_connection()
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 333, in _create_connection
+    return _ConnectionRecord(self)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 461, in __init__
+    self.__connect(first_connect_check=True)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\pool.
+py", line 651, in __connect
+    connection = pool._invoke_creator(self)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\strategies.py", line 105, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\sqlalchemy\engin
+e\default.py", line 393, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\MySQLdb\__init__
+.py", line 81, in Connect
+    return Connection(*args, **kwargs)
+  File "D:\Users\Kevin\MYDOCU~1\CODING~1\MySQL\FLASKM~1\lib\site-packages\MySQLdb\connecti
+ons.py", line 206, in __init__
+    super(Connection, self).__init__(*args, **kwargs2)
+sqlalchemy.exc.OperationalError: (_mysql_exceptions.OperationalError) (2003, "Can't connec
+t to MySQL server on '127.0.0.1' (10061)")
